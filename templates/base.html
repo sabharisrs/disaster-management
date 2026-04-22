@@ -16,25 +16,69 @@
     <div class="bg-orb orb-one"></div>
     <div class="bg-orb orb-two"></div>
     <div class="bg-grid"></div>
-    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top premium-navbar">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="{{ url_for('home') }}">
-                <span class="brand-mark">DH</span>
-                <span class="brand-text">Disaster Help Coordination Platform</span>
+            <a class="navbar-brand fw-bold brand-wrapper" href="{{ url_for('home') }}">
+                <span class="brand-mark">
+                    <i class="fas fa-shield-alt"></i>
+                </span>
+                <div class="brand-info">
+                    <span class="brand-title">Disaster Help</span>
+                    <span class="brand-subtitle">Crisis Response Hub</span>
+                </div>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="mainNavbar">
-                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('home') }}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}">Register</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('contact') }}">Contact</a></li>
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-3">
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-animated" href="{{ url_for('home') }}">
+                            <i class="fas fa-home me-2"></i>Home
+                            <span class="nav-underline"></span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-animated" href="{{ url_for('about') }}">
+                            <i class="fas fa-info-circle me-2"></i>About
+                            <span class="nav-underline"></span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-animated" href="{{ url_for('contact') }}">
+                            <i class="fas fa-envelope me-2"></i>Contact
+                            <span class="nav-underline"></span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-animated" href="{{ url_for('view_requests') }}">
+                            <i class="fas fa-list me-2"></i>Requests
+                            <span class="nav-underline"></span>
+                        </a>
+                    </li>
                     {% if current_user.is_authenticated %}
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a></li>
-                        <li class="nav-item ms-lg-2"><a class="btn btn-accent btn-sm px-3" href="{{ url_for('logout') }}">Logout</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link nav-link-animated dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle me-2"></i>{{ current_user.name }}
+                                <span class="nav-underline"></span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end premium-dropdown" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" href="{{ url_for('dashboard') }}"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item ms-lg-2">
+                            <a class="btn btn-accent btn-sm px-3 nav-btn" href="{{ url_for('register') }}">
+                                <i class="fas fa-user-plus me-2"></i>Register
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-outline-accent btn-sm px-3 nav-btn" href="{{ url_for('login') }}">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                            </a>
+                        </li>
                     {% endif %}
                 </ul>
             </div>

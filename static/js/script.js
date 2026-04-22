@@ -82,13 +82,42 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+// Highlight active navigation link
+function highlightActiveNavLink() {
+    const currentPath = window.location.pathname;
+    const navLinks = document.querySelectorAll('.nav-link-animated');
+    
+    navLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === currentPath || (currentPath === '/' && href === '/')) {
+            link.style.color = 'var(--text-main) !important';
+            const underline = link.querySelector('.nav-underline');
+            if (underline) {
+                underline.style.width = '100%';
+            }
+        }
+    });
+}
+
 // Initialize cursor follower and letter hover effects when page loads
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize cursor follower
-    initCursorFollower();
+    // Highlight active nav link
+    highlightActiveNavLink();
     
-    // Initialize letter hover effects
-    initLetterHover();
+    // Check for reduced motion preference
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    
+    if (!prefersReducedMotion) {
+        try {
+            // Initialize cursor follower
+            initCursorFollower();
+            
+            // Initialize letter hover effects
+            initLetterHover();
+        } catch (error) {
+            console.warn('Hero animation initialization failed:', error);
+        }
+    }
     
     // Password toggle functionality
     const togglePassword = document.getElementById('togglePassword');
@@ -168,6 +197,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Cursor follower functionality
 function initCursorFollower() {
+    // Check if device supports hover (not touch-only)
+    if (window.matchMedia && window.matchMedia('(hover: none)').matches) {
+        return; // Don't initialize cursor follower on touch devices
+    }
+
     const cursor = document.createElement('div');
     cursor.className = 'cursor-follower';
     document.body.appendChild(cursor);
@@ -176,21 +210,33 @@ function initCursorFollower() {
     let mouseY = 0;
     let cursorX = 0;
     let cursorY = 0;
+    let isActive = false;
     
     document.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
+        
+        if (!isActive) {
+            isActive = true;
+        }
+    });
+    
+    document.addEventListener('mouseleave', () => {
+        cursor.classList.remove('hover');
     });
     
     function updateCursor() {
-        const dx = mouseX - cursorX;
-        const dy = mouseY - cursorY;
-        
-        cursorX += dx * 0.15;
-        cursorY += dy * 0.15;
-        
-        cursor.style.left = `${cursorX - 10}px`;
-        cursor.style.top = `${cursorY - 10}px`;
+        if (isActive) {
+            const dx = mouseX - cursorX;
+            const dy = mouseY - cursorY;
+            
+            // Smooth following with easing
+            cursorX += dx * 0.12;
+            cursorY += dy * 0.12;
+            
+            cursor.style.left = `${cursorX - 10}px`;
+            cursor.style.top = `${cursorY - 10}px`;
+        }
         
         requestAnimationFrame(updateCursor);
     }
@@ -198,7 +244,7 @@ function initCursorFollower() {
     updateCursor();
     
     // Add hover effects for interactive elements
-    const interactiveElements = document.querySelectorAll('a, button, .role-card, .hero-text-animated');
+    const interactiveElements = document.querySelectorAll('a, button, .role-card, .hero-text-animated, .hero-text-animated span');
     
     interactiveElements.forEach(el => {
         el.addEventListener('mouseenter', () => {
@@ -216,16 +262,29 @@ function initLetterHover() {
     const heroText = document.querySelector('.hero-text-animated');
     if (!heroText) return;
     
-    const text = heroText.textContent;
+    // Clear any existing content first
     heroText.innerHTML = '';
     
-    // Split text into individual letters/spaces
+    // Get the full text from data attribute
+    const text = heroText.getAttribute('data-text') || '';
+    
+    if (!text) return;
+    
+    // Split text into individual letters/spaces and create spans
     for (let i = 0; i < text.length; i++) {
         const span = document.createElement('span');
-        span.textContent = text[i];
-        if (text[i] === ' ') {
+        const char = text[i];
+        
+        if (char === ' ') {
+            // Use regular space, not &nbsp;
+            span.textContent = ' ';
             span.style.display = 'inline';
+            span.classList.add('space');
+        } else {
+            span.textContent = char;
+            span.style.display = 'inline-block';
         }
+        
         heroText.appendChild(span);
     }
 }
