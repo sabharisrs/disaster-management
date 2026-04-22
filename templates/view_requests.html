@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}View Requests | Disaster Help Coordination Platform{% endblock %}
+
+{% block content %}
+<section class="mb-4">
+    <div class="dashboard-header">
+        <div>
+            <h1 class="mb-1">All Help Requests</h1>
+            <p class="mb-0 dashboard-copy">Browse emergency requests, review urgency, and track live locations on the map.</p>
+        </div>
+        {% if current_user.role == "Victim" %}
+            <a href="{{ url_for('create_request') }}" class="btn btn-accent px-4">Create Request</a>
+        {% endif %}
+    </div>
+</section>
+
+<section class="mb-5">
+    <div class="content-card map-shell">
+        <div class="section-heading mb-3">
+            <div>
+                <span class="section-kicker">Map View</span>
+                <h2 class="section-title h4 mb-1">Live request locations</h2>
+            </div>
+            <p class="section-copy mb-0">Markers help volunteers identify where assistance is needed.</p>
+        </div>
+        <div
+            id="requests-map"
+            class="map-box map-large"
+            data-mode="viewer"
+            data-source="{{ url_for('map_data') }}"
+        ></div>
+    </div>
+</section>
+
+<section>
+    <div class="row g-4">
+        {% for item in requests_data %}
+            <div class="col-lg-6">
+                <div class="request-card h-100">
+                    <div class="card-topline">
+                        <span class="badge text-bg-{{ badge_class(item.status) }}">{{ item.status }}</span>
+                        <span class="chip-label">{{ item.disaster_type }}</span>
+                    </div>
+                    <h3 class="h5">{{ item.title }}</h3>
+                    <p class="card-copy">{{ item.description }}</p>
+                    <div class="small card-meta mb-3">
+                        <div><strong>Urgency:</strong> {{ item.urgency }}</div>
+                        <div><strong>Location:</strong> {{ item.latitude }}, {{ item.longitude }}</div>
+                        <div><strong>Contact:</strong> {{ item.contact }}</div>
+                    </div>
+                    {% if current_user.role == "Volunteer" %}
+                        <div class="d-flex flex-wrap gap-2">
+                            {% set action = volunteer_actions.get(item.id) %}
+                            <form method="POST" action="{{ url_for('accept_request', request_id=item.id) }}">
+                                <button type="submit" class="btn btn-outline-light btn-sm" {% if item.status == 'Completed' or action %}disabled{% endif %}>Accept Request</button>
+                            </form>
+                            <form method="POST" action="{{ url_for('complete_request', request_id=item.id) }}">
+                                <button type="submit" class="btn btn-accent btn-sm" {% if not action or item.status == 'Completed' %}disabled{% endif %}>Complete Request</button>
+                            </form>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% else %}
+            <div class="col-12">
+                <div class="empty-state text-center">
+                    <h3 class="h5">No help requests available</h3>
+                    <p class="mb-0">Requests will appear here once victims start submitting them.</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

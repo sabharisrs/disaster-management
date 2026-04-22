@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}About | Disaster Help Coordination Platform{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="content-card h-100">
+            <span class="section-kicker">About</span>
+            <h1 class="mb-3">Built to make emergency coordination simpler.</h1>
+            <p>This platform is designed to help communities respond faster during emergencies. Victims can create requests with accurate map locations, volunteers can accept assignments, and administrators can monitor platform activity.</p>
+            <p class="mb-0">The application is beginner-friendly and built with Flask, SQLite, Bootstrap 5, and OpenStreetMap via Leaflet.</p>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="glass-card h-100 tone-accent">
+            <h2 class="h4 mb-3">What makes it useful</h2>
+            <p class="mb-2">Clear request statuses keep everyone aligned.</p>
+            <p class="mb-2">Map-based location sharing improves response time.</p>
+            <p class="mb-0">Role-based dashboards reduce confusion for each user type.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

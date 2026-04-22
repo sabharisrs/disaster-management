@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard | Disaster Help Coordination Platform{% endblock %}
+
+{% block content %}
+<section class="mb-4">
+    <div class="dashboard-header">
+        <div>
+            <h1 class="mb-1">Admin Dashboard</h1>
+            <p class="mb-0 dashboard-copy">Monitor users, review requests, and manage platform activity from one control center.</p>
+        </div>
+    </div>
+</section>
+
+<section class="row g-4 mb-5">
+    <div class="col-md-4">
+        <div class="stat-card">
+            <span class="stat-label">Total Users</span>
+            <h2>{{ statistics.total_users }}</h2>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card">
+            <span class="stat-label">Total Requests</span>
+            <h2>{{ statistics.total_requests }}</h2>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card">
+            <span class="stat-label">Completed Requests</span>
+            <h2>{{ statistics.completed_requests }}</h2>
+        </div>
+    </div>
+</section>
+
+<section class="mb-5">
+    <div class="content-card">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="h4 mb-0">All Users</h2>
+            <span class="chip-label">{{ users|length }} records</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Role</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td>{{ user.name }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.phone }}</td>
+                            <td><span class="chip-label">{{ user.role }}</span></td>
+                            <td>
+                                {% if not user.is_admin() %}
+                                    <form method="POST" action="{{ url_for('delete_user', user_id=user.id) }}">
+                                        <button type="submit" class="btn btn-danger-soft btn-sm">Delete</button>
+                                    </form>
+                                {% else %}
+                                    <span class="text-muted small">Protected</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="content-card">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="h4 mb-0">All Requests</h2>
+            <span class="chip-label">{{ requests_data|length }} records</span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Disaster</th>
+                        <th>Urgency</th>
+                        <th>Status</th>
+                        <th>Created By</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in requests_data %}
+                        <tr>
+                            <td>{{ item.title }}</td>
+                            <td>{{ item.disaster_type }}</td>
+                            <td>{{ item.urgency }}</td>
+                            <td><span class="badge text-bg-{{ badge_class(item.status) }}">{{ item.status }}</span></td>
+                            <td>{{ item.creator.name }}</td>
+                            <td>
+                                <form method="POST" action="{{ url_for('delete_request', request_id=item.id) }}">
+                                    <button type="submit" class="btn btn-danger-soft btn-sm">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

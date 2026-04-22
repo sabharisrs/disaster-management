@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}Home | Disaster Help Coordination Platform{% endblock %}
+
+{% block content %}
+<section class="hero-section mb-5">
+    <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+            <span class="eyebrow-pill mb-3">Helping People During Disasters</span>
+            <h1 class="hero-title mb-3">
+                <span class="hero-text-animated" data-text="Find help faster. Coordinate relief with clarity when emergencies hit.">
+                    Find help faster. Coordinate relief with clarity when emergencies hit.
+                </span>
+            </h1>
+            <p class="hero-text mb-4">Built for floods, storms, earthquakes, and fires, this platform helps victims raise requests, volunteers respond quickly, and teams keep every case visible from pending to completed.</p>
+            <div class="d-flex flex-wrap gap-3">
+                <a href="{{ url_for('register') }}" class="btn btn-accent btn-lg px-4">Request Help</a>
+                <a href="{{ url_for('register') }}" class="btn btn-outline-light btn-lg px-4">Become Volunteer</a>
+            </div>
+            <div class="hero-metrics mt-4">
+                <div class="metric-card">
+                    <span class="metric-number">{{ latest_requests|length }}</span>
+                    <span class="metric-label">Recent visible cases</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-number">24/7</span>
+                    <span class="metric-label">Response coordination</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-number">Map</span>
+                    <span class="metric-label">Location-based support</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="hero-panel">
+                <div class="panel-topline">Crisis Workflow</div>
+                <h3 class="h4 mb-3">A clearer response flow for victims, volunteers, and admins.</h3>
+                <div class="step-list mt-3">
+                    <div class="step-item">
+                        <strong>1. Register with your role</strong>
+                        <p class="mb-0">Choose victim or volunteer and sign in with secure authentication.</p>
+                    </div>
+                    <div class="step-item">
+                        <strong>2. Pin the exact location</strong>
+                        <p class="mb-0">Use the map to set coordinates so responders know where to go.</p>
+                    </div>
+                    <div class="step-item">
+                        <strong>3. Track the full journey</strong>
+                        <p class="mb-0">Follow requests from pending to accepted and completed with clear status badges.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mb-5">
+    <div class="section-heading mb-4">
+        <div>
+            <span class="section-kicker">Disaster Coverage</span>
+            <h2 class="section-title mb-1">Designed for real emergency coordination</h2>
+        </div>
+        <p class="section-copy mb-0">Each request carries disaster type, urgency, contact details, and live location data so help can move faster.</p>
+    </div>
+    <div class="row g-4">
+        <div class="col-md-3">
+            <div class="glass-card h-100 tone-one">
+                <h3 class="h5">Floods</h3>
+                <p class="mb-0">Coordinate rescue boats, clean water, food, and shelter for flood-affected families.</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="glass-card h-100 tone-two">
+                <h3 class="h5">Fires</h3>
+                <p class="mb-0">Route urgent assistance for evacuation, medical support, and safe housing.</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="glass-card h-100 tone-three">
+                <h3 class="h5">Earthquakes</h3>
+                <p class="mb-0">Connect survivors with emergency responders, supplies, and volunteer teams.</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="glass-card h-100 tone-accent">
+                <h3 class="h5">Storms</h3>
+                <p class="mb-0">Support power outage response, transport coordination, and relief distribution.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mb-4">
+    <div class="section-heading mb-4">
+        <div>
+            <span class="section-kicker">Live Requests</span>
+            <h2 class="section-title mb-1">Recent help requests</h2>
+            <p class="section-copy mb-0">A quick view of the latest requests being coordinated on the platform.</p>
+        </div>
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('view_requests') }}" class="btn btn-outline-light">View All Requests</a>
+        {% endif %}
+    </div>
+    <div class="row g-4">
+        {% for item in latest_requests %}
+            <div class="col-md-6 col-lg-4">
+                <div class="request-card h-100">
+                    <div class="card-topline">
+                        <span class="badge text-bg-{{ badge_class(item.status) }}">{{ item.status }}</span>
+                        <span class="chip-label">{{ item.disaster_type }}</span>
+                    </div>
+                    <h3 class="h5">{{ item.title }}</h3>
+                    <p class="card-copy">{{ item.description[:120] }}{% if item.description|length > 120 %}...{% endif %}</p>
+                    <div class="small card-meta">
+                        <div><strong>Urgency:</strong> {{ item.urgency }}</div>
+                        <div><strong>Location:</strong> {{ item.latitude }}, {{ item.longitude }}</div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-12">
+                <div class="empty-state text-center">
+                    <h3 class="h5">No requests yet</h3>
+                    <p class="mb-3">Create the first emergency request after registering.</p>
+                    <a href="{{ url_for('register') }}" class="btn btn-accent">Get Started</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

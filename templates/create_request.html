@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}{% if form_mode == "edit" %}Edit Request{% else %}Create Request{% endif %} | Disaster Help Coordination Platform{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-xl-10">
+        <div class="form-card">
+            <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-2 mb-4">
+                <div>
+                    <h1 class="h2 mb-1">{% if form_mode == "edit" %}Edit Help Request{% else %}Create Help Request{% endif %}</h1>
+                    <p class="form-intro mb-0">Fill in the emergency details and use the map to select the exact location.</p>
+                </div>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-outline-light">Cancel</a>
+            </div>
+
+            <form method="POST" novalidate>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Title</label>
+                        <input type="text" name="title" class="form-control" required value="{{ request.form.get('title', help_request.title if help_request else '') }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Contact Number</label>
+                        <input type="text" name="contact" class="form-control" required value="{{ request.form.get('contact', help_request.contact if help_request else current_user.phone) }}">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" rows="4" class="form-control" required>{{ request.form.get('description', help_request.description if help_request else '') }}</textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Disaster Type</label>
+                        {% set selected_disaster = request.form.get('disaster_type', help_request.disaster_type if help_request else '') %}
+                        <select name="disaster_type" class="form-select" required>
+                            <option value="">Choose disaster type</option>
+                            <option value="Flood" {% if selected_disaster == 'Flood' %}selected{% endif %}>Flood</option>
+                            <option value="Fire" {% if selected_disaster == 'Fire' %}selected{% endif %}>Fire</option>
+                            <option value="Earthquake" {% if selected_disaster == 'Earthquake' %}selected{% endif %}>Earthquake</option>
+                            <option value="Storm" {% if selected_disaster == 'Storm' %}selected{% endif %}>Storm</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        {% set selected_urgency = request.form.get('urgency', help_request.urgency if help_request else '') %}
+                        <label class="form-label">Urgency Level</label>
+                        <select name="urgency" class="form-select" required>
+                            <option value="">Choose urgency level</option>
+                            <option value="Low" {% if selected_urgency == 'Low' %}selected{% endif %}>Low</option>
+                            <option value="Medium" {% if selected_urgency == 'Medium' %}selected{% endif %}>Medium</option>
+                            <option value="High" {% if selected_urgency == 'High' %}selected{% endif %}>High</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Latitude</label>
+                        <input type="text" id="latitude" name="latitude" class="form-control" required value="{{ request.form.get('latitude', help_request.latitude if help_request else '') }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Longitude</label>
+                        <input type="text" id="longitude" name="longitude" class="form-control" required value="{{ request.form.get('longitude', help_request.longitude if help_request else '') }}">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Choose Location on Map</label>
+                        <div class="map-shell compact">
+                            <div
+                                id="request-map"
+                                class="map-box"
+                                data-mode="picker"
+                                data-lat="{{ request.form.get('latitude', help_request.latitude if help_request else 20.5937) }}"
+                                data-lng="{{ request.form.get('longitude', help_request.longitude if help_request else 78.9629) }}"
+                            ></div>
+                            <small class="text-muted">Click on the map to automatically fill latitude and longitude.</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-wrap gap-3 mt-4">
+                    <button type="submit" class="btn btn-accent px-4">Submit Request</button>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-light px-4">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

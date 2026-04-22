@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Register | Disaster Help Coordination Platform{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="form-card">
+            <span class="section-kicker">Join the Platform</span>
+            <h1 class="h2 mb-3">Create your account</h1>
+            <p class="form-intro mb-4">Register as a victim to request help or as a volunteer to support people during disasters.</p>
+            <form method="POST" novalidate id="registerForm">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">
+                            <i class="fas fa-user me-2"></i>Full Name
+                        </label>
+                        <input type="text" name="name" class="form-control" required value="{{ request.form.get('name', '') }}" placeholder="Enter your full name">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">
+                            <i class="fas fa-envelope me-2"></i>Email
+                        </label>
+                        <input type="email" name="email" class="form-control" required value="{{ request.form.get('email', '') }}" placeholder="your@email.com">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">
+                            <i class="fas fa-lock me-2"></i>Password
+                        </label>
+                        <div class="input-group">
+                            <input type="password" name="password" class="form-control" id="password" required placeholder="Create a strong password">
+                            <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="password-strength mt-2" id="passwordStrength"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">
+                            <i class="fas fa-phone me-2"></i>Phone Number
+                        </label>
+                        <input type="tel" name="phone" class="form-control" required value="{{ request.form.get('phone', '') }}" placeholder="+1 (555) 123-4567">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">
+                            <i class="fas fa-user-tag me-2"></i>Role Selection
+                        </label>
+                        <div class="role-selection">
+                            <div class="role-option" data-role="Victim">
+                                <input type="radio" name="role" value="Victim" id="role-victim" required {% if request.form.get('role') == 'Victim' %}checked{% endif %}>
+                                <label for="role-victim" class="role-card">
+                                    <div class="role-icon">
+                                        <i class="fas fa-hand-holding-heart"></i>
+                                    </div>
+                                    <div class="role-content">
+                                        <h6>Victim</h6>
+                                        <p>Request emergency help during disasters</p>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="role-option" data-role="Volunteer">
+                                <input type="radio" name="role" value="Volunteer" id="role-volunteer" required {% if request.form.get('role') == 'Volunteer' %}checked{% endif %}>
+                                <label for="role-volunteer" class="role-card">
+                                    <div class="role-icon">
+                                        <i class="fas fa-hands-helping"></i>
+                                    </div>
+                                    <div class="role-content">
+                                        <h6>Volunteer</h6>
+                                        <p>Help others during emergency situations</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-check mt-3">
+                    <input class="form-check-input" type="checkbox" id="termsCheck" required>
+                    <label class="form-check-label" for="termsCheck">
+                        I agree to the <a href="#" class="text-accent">Terms of Service</a> and <a href="#" class="text-accent">Privacy Policy</a>
+                    </label>
+                </div>
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-accent btn-lg" id="registerBtn">
+                        <span class="btn-text">Create Account</span>
+                        <span class="btn-loading d-none">
+                            <i class="fas fa-spinner fa-spin me-2"></i>Creating...
+                        </span>
+                    </button>
+                </div>
+            </form>
+            <div class="text-center mt-4">
+                <p class="mb-0">Already have an account? <a href="{{ url_for('login') }}" class="text-accent fw-bold">Sign in here</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
