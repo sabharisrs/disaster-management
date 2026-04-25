@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Local Services Finder</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="app-header">
+      <img src="../static/images/logo.svg" alt="logo" class="logo-small">
+      <h1>Local Services Finder</h1>
+      <p class="lead">Add and find local services. Data is stored in your browser.</p>
+    </header>
+
+    <section class="form-section">
+      <form id="service-form">
+        <div class="row">
+          <label for="name">Service name</label>
+          <input id="name" name="name" required>
+        </div>
+        <div class="row">
+          <label for="category">Category</label>
+          <input id="category" name="category">
+        </div>
+        <div class="row">
+          <label for="phone">Phone</label>
+          <input id="phone" name="phone">
+        </div>
+        <div class="row">
+          <label for="address">Address</label>
+          <input id="address" name="address">
+        </div>
+        <div class="actions">
+          <button type="submit" class="btn">Add Service</button>
+          <button type="button" id="clear-all" class="btn btn-ghost">Clear All</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="list-section">
+      <h2>Saved Services</h2>
+      <ul id="services-list" class="services-list"></ul>
+      <p id="empty-note" class="empty-note">No services yet — add one above.</p>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
