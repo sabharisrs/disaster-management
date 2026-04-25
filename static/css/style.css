@@ -370,6 +370,28 @@ a {
     white-space: normal;
 }
 
+/* Ensure hero text wraps and aligns well on small screens */
+.hero-text-animated{
+    display:block;
+    color:var(--text-main);
+}
+
+@media (max-width: 992px){
+    .hero-section{padding:1.25rem}
+    .hero-title{font-size:clamp(1.6rem,6vw,3rem);text-align:left}
+    .brand-info{display:none}
+}
+
+@media (max-width: 576px){
+    .hero-title{font-size:2rem;text-align:left}
+    .hero-panel{margin-top:1rem}
+    .brand-mark{width:2.2rem;height:2.2rem}
+}
+
+/* Brand logo */
+.brand-logo{width:40px;height:auto;display:block}
+.brand-mark{display:flex;align-items:center;justify-content:center;padding:0.25rem}
+
 /* Request card improvements */
 .request-card {
     padding: 1.25rem;
